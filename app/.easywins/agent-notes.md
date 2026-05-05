@@ -1,15 +1,15 @@
 # Easy Wins Agent Notes
 
 Project: easy-wins
-Last analyzed: 2026-05-05T11:34:30.176Z
+Last analyzed: 2026-05-05T23:53:48.835Z
 Overall score: 100%
 Stage: Production-ready
 
 ## Active Win
 
-Add a focused WCAG 2.2 AA pass for keyboard flow, labels, contrast, and focus states.
+Commit uncommitted changes
 
-Start here: src\App.tsx, src\main.tsx, src\components\ProgressBar.tsx, src\components\ScoreRadar.tsx
+Start here: app/.easywins/agent-notes.md, app/.easywins/metadata.json, app/CHANGELOG.md, app/README.md, app/electron-builder.config.json
 
 ## Agent Ritual
 
