@@ -1,0 +1,5 @@
+{
+  "linuxPackageFormats": ["AppImage", "deb"],
+  "desktopCategory": "Development",
+  "releaseChecklist": "docs/release-checklist.md"
+}
