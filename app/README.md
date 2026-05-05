@@ -2,6 +2,12 @@
 
 A local tool that analyzes any project directory and generates an easy-to-read dashboard showing project stage, completion percentages, what's working, what needs fixing, and next easy wins.
 
+## Readiness Status
+
+- **Accessibility:** WCAG 2.2 AA dashboard pass is documented in `docs/accessibility.md`, covering keyboard flow, labels, contrast, focus states, reduced motion, and chart semantics.
+- **GitHub release:** Versioning, artifact, changelog, validation, and release-note steps are documented in `docs/release-checklist.md`.
+- **CI:** GitHub Actions runs install, lint, typecheck, build, tests, and Docker build from the app workspace.
+
 ## Features
 
 - **Directory scanning** — Scans file trees, README/docs, package/config files, TODO/FIXME/HACK comments, git status, recent commits, dependency files, and source file structure
@@ -55,6 +61,21 @@ npm start
 ```
 
 The production server serves the built frontend from `dist/` and runs the API on port 3001 (or `PORT` env var).
+
+## Release Checklist
+
+Before creating a GitHub release:
+
+- Update `package.json` version.
+- Add release notes to `CHANGELOG.md`.
+- Run `npm run typecheck`, `npm test`, and `npm run build`.
+- Run `npm run electron:build` when publishing desktop artifacts.
+- Attach generated installer artifacts from `release/` to the GitHub release instead of committing them.
+- For macOS, complete signing and notarization before distributing DMG or ZIP artifacts.
+- For Linux, verify AppImage/deb packaging, desktop metadata, icon rendering, and install notes.
+- Confirm `docs/accessibility.md` still reflects the current WCAG 2.2 AA state.
+
+See `docs/release-checklist.md` for the full checklist.
 
 ## API
 
@@ -123,6 +144,7 @@ Analyzes a project directory and returns a comprehensive report.
 │   │   └── promptBuilder.ts # LLM prompt builder
 │   └── types/report.ts      # TypeScript types
 ├── .env.example             # Example environment config
+├── docs/                    # Accessibility and release readiness notes
 ├── package.json
 └── README.md
 ```
