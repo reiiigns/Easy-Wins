@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 
 interface ProgressBarProps {
   value: number;
+  label?: string;
   height?: number;
   className?: string;
   animated?: boolean;
@@ -13,8 +14,9 @@ function getScoreColor(score: number): string {
   return "#EF4444";
 }
 
-export default function ProgressBar({ value, height = 8, className = "", animated = true }: ProgressBarProps) {
-  const [width, setWidth] = useState(animated ? 0 : value);
+export default function ProgressBar({ value, label = "Progress", height = 8, className = "", animated = true }: ProgressBarProps) {
+  const normalizedValue = Math.max(0, Math.min(100, Math.round(value)));
+  const [width, setWidth] = useState(animated ? 0 : normalizedValue);
   const hasAnimated = useRef(false);
 
   useEffect(() => {
@@ -22,21 +24,27 @@ export default function ProgressBar({ value, height = 8, className = "", animate
 
     const timer = setTimeout(() => {
       hasAnimated.current = true;
-      setWidth(value);
+      setWidth(normalizedValue);
     }, hasAnimated.current ? 0 : 50);
 
     return () => clearTimeout(timer);
-  }, [value, animated]);
+  }, [normalizedValue, animated]);
 
-  const displayWidth = animated ? width : value;
-  const color = getScoreColor(value);
+  const displayWidth = animated ? width : normalizedValue;
+  const color = getScoreColor(normalizedValue);
 
   return (
     <div
+      role="progressbar"
+      aria-label={label}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={normalizedValue}
       className={`w-full rounded-full ${className}`}
       style={{ height, backgroundColor: "var(--bg-elevated)" }}
     >
       <div
+        aria-hidden="true"
         className="h-full rounded-full transition-all duration-600 ease-out"
         style={{ width: `${displayWidth}%`, backgroundColor: color }}
       />
