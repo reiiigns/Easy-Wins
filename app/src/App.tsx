@@ -579,7 +579,13 @@ function SavedAnalysesPanel({
                 </div>
               </div>
               <div className="flex items-center justify-end gap-3 md:justify-self-end">
-                <ScoreRing score={item.report.scores.overall} size={82} strokeWidth={5} showPercent />
+                <ScoreRing
+                  score={item.report.scores.overall}
+                  label={`${item.name} overall completion`}
+                  size={82}
+                  strokeWidth={5}
+                  showPercent
+                />
                 <span className="hidden sm:block text-xs w-[72px]" style={{ color: "var(--text-muted)" }}>
                   completion
                 </span>
@@ -638,7 +644,7 @@ function AchievementsPanel({ state, projectId, projectName }: { state: Achieveme
             ))}
           </div>
           <div className="mt-3">
-            <ProgressBar value={progress} height={6} animated={false} />
+            <ProgressBar value={progress} label={`${projectName} reward progress`} height={6} animated={false} />
             <p className="mt-2 text-xs" style={{ color: "var(--text-muted)" }}>
               {tier.nextAt ? `${tier.nextAt - projectState.totalPoints} points to next reward` : "Top reward reached"}
             </p>
@@ -981,7 +987,9 @@ function TodayWinHero({ report, onShowFull }: { report: ProjectReport; onShowFul
       <div className="flex flex-wrap items-center gap-3">
         {startFile && (
           <button
+            type="button"
             onClick={handleCopy}
+            aria-label={`Copy start file ${startFile}`}
             className="h-9 px-4 rounded-lg text-sm font-semibold flex items-center gap-2 transition-all hover:brightness-110 active:scale-95"
             style={{ backgroundColor: "#F59E0B", color: "#0d0d0d" }}
           >
@@ -990,7 +998,9 @@ function TodayWinHero({ report, onShowFull }: { report: ProjectReport; onShowFul
           </button>
         )}
         <button
+          type="button"
           onClick={onShowFull}
+          aria-controls="analysis-report"
           className="h-9 px-4 rounded-lg text-sm font-medium flex items-center gap-2 transition-colors"
           style={{
             backgroundColor: "var(--bg-elevated)",
@@ -1262,7 +1272,9 @@ export default function App() {
                 {selectingFolder ? <Loader size={15} className="animate-spin-loader" /> : <FolderOpen size={17} />}
               </button>
               <input
+                id="project-path"
                 type="text"
+                aria-label="Project directory path"
                 value={path}
                 onChange={(e) => setPath(e.target.value)}
                 onKeyDown={handleKeyDown}
@@ -1278,6 +1290,7 @@ export default function App() {
               />
             </div>
             <button
+              type="button"
               onClick={handleAnalyze}
               disabled={profileDisabled || !path.trim()}
               className="h-11 px-6 rounded-lg text-sm font-semibold text-white flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 active:scale-[0.98]"
@@ -1327,6 +1340,8 @@ export default function App() {
         {/* ─── Loading State ───────────────────────────────────────────── */}
         {loading && (
           <div
+            role="status"
+            aria-live="polite"
             className="app-card rounded-xl border p-16 flex flex-col items-center justify-center"
             style={{ backgroundColor: "var(--bg-card)", borderColor: "var(--border-subtle)" }}
           >
@@ -1362,6 +1377,7 @@ export default function App() {
         {/* ─── Error State ─────────────────────────────────────────────── */}
         {error && !loading && (
           <div
+            role="alert"
             className="rounded-lg border-l-4 p-6 mb-8"
             style={{
               backgroundColor: "rgba(239,68,68,0.05)",
@@ -1376,6 +1392,7 @@ export default function App() {
               {error}
             </p>
             <button
+              type="button"
               onClick={handleAnalyze}
               className="h-9 px-4 rounded-lg text-sm font-semibold text-white flex items-center gap-2 hover:brightness-110"
               style={{ backgroundColor: "var(--accent-blue)" }}
@@ -1412,7 +1429,9 @@ export default function App() {
             {!showFullAnalysis && (
               <div className="text-center py-2">
                 <button
+                  type="button"
                   onClick={() => setShowFullAnalysis(true)}
+                  aria-controls="analysis-report"
                   className="text-sm flex items-center gap-1.5 mx-auto transition-colors"
                   style={{ color: "var(--text-muted)" }}
                 >
@@ -1514,7 +1533,7 @@ export default function App() {
                     >
                       {item.value}%
                     </p>
-                    <ProgressBar value={item.value} className="mt-3" />
+                    <ProgressBar value={item.value} label={`${item.label} score`} className="mt-3" />
                   </div>
                 ))}
               </div>
