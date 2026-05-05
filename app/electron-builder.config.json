@@ -1,0 +1,41 @@
+{
+  "appId": "com.easywinstracker.app",
+  "productName": "Easy Wins",
+  "copyright": "Easy Wins Project Tracker",
+  "directories": {
+    "output": "release",
+    "buildResources": "assets"
+  },
+  "asar": false,
+  "files": [
+    "dist/**/*",
+    "assets/**/*",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "models",
+      "to": "models",
+      "filter": ["**/*.gguf"]
+    },
+    {
+      "from": "tools",
+      "to": "tools"
+    }
+  ],
+  "win": {
+    "target": [
+      { "target": "nsis", "arch": ["x64"] }
+    ],
+    "icon": "assets/icon.ico"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "runAfterFinish": true,
+    "shortcutName": "Easy Wins"
+  }
+}
