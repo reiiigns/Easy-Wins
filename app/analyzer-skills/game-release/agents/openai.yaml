@@ -1,0 +1,4 @@
+interface:
+  display_name: "Game Release"
+  short_description: "Check game launch readiness"
+  default_prompt: "Assess game release readiness, store requirements, controller support, performance, and launch checklist gaps."
