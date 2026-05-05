@@ -932,9 +932,10 @@ function inferPublishingReadiness(summary: ScanSummary): ProjectReport["publishi
   return targets.map(target => {
     if (target === "Web/PWA") {
       const hasManifest = hasTopLevelFile(summary, ["manifest.json"]) || hasSourcePath(summary, ["manifest.json"]);
+      const hasPublicManifest = hasConfig(summary, ["manifest.json"]) || readmeIncludes(summary, ["web manifest", "manifest.json"]);
       return {
         target,
-        status: hasBuildScript(summary) && hasManifest ? "Ready" as const : "Needs work" as const,
+        status: hasBuildScript(summary) && (hasManifest || hasPublicManifest) ? "Ready" as const : "Needs work" as const,
         requirement: "Production build, web manifest, and deploy notes.",
         nextStep: hasBuildScript(summary)
           ? "Add or verify the web app manifest and deployment checklist."
