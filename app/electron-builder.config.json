@@ -29,6 +29,23 @@
     ],
     "icon": "assets/icon.ico"
   },
+  "mac": {
+    "target": [
+      { "target": "dmg", "arch": ["x64", "arm64"] },
+      { "target": "zip", "arch": ["x64", "arm64"] }
+    ],
+    "icon": "assets/icon.icns",
+    "hardenedRuntime": true,
+    "gatekeeperAssess": false
+  },
+  "linux": {
+    "target": [
+      { "target": "AppImage", "arch": ["x64"] },
+      { "target": "deb", "arch": ["x64"] }
+    ],
+    "icon": "assets/icon.png",
+    "category": "Development"
+  },
   "nsis": {
     "oneClick": false,
     "perMachine": false,
