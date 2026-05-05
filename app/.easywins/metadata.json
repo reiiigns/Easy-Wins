@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "project": {
     "name": "easy-wins",
-    "path": "i:\\Project Tracker\\app",
-    "gitBranch": null,
-    "lastCommit": null,
-    "hasUncommittedChanges": false
+    "path": "I:\\Project Tracker\\app",
+    "gitBranch": "main",
+    "lastCommit": "09ccaaa - Improve analysis profile guidance (2026-05-06T08:37:34+09:00)",
+    "hasUncommittedChanges": true
   },
   "analysis": {
-    "analyzedAt": "2026-05-05T11:34:30.176Z",
+    "analyzedAt": "2026-05-05T23:53:48.835Z",
     "source": "api/analyze",
     "confidence": "Medium",
     "stage": "Production-ready",
@@ -16,81 +16,82 @@
   },
   "analysisProfile": {
     "platforms": [
-      "Web"
+      "Desktop",
+      "Web",
+      "Server/API"
     ],
-    "osTargets": [],
+    "osTargets": [
+      "Windows",
+      "macOS",
+      "Linux"
+    ],
     "readinessFocuses": [
-      "Solo/Indie"
+      "Launch"
     ],
     "accessibilityStandards": [
       "WCAG 2.2 AA"
     ],
     "publishingTargets": [
       "Web/PWA",
-      "GitHub release"
+      "GitHub release",
+      "Microsoft Store",
+      "Mac notarized app",
+      "Linux package"
     ]
   },
   "activeWin": {
-    "task": "Add a focused WCAG 2.2 AA pass for keyboard flow, labels, contrast, and focus states.",
-    "whyItMatters": "WCAG 2.2 AA is part of the selected analysis profile.",
+    "task": "Commit uncommitted changes",
+    "whyItMatters": "Keeping a clean working directory prevents accidental loss of work and makes context switching easier.",
     "difficulty": "Easy",
-    "estimatedTime": "30 min",
+    "estimatedTime": "15 min",
     "filesLikelyInvolved": [
-      "src\\App.tsx",
-      "src\\main.tsx",
-      "src\\components\\ProgressBar.tsx",
-      "src\\components\\ScoreRadar.tsx"
+      "app/.easywins/agent-notes.md",
+      "app/.easywins/metadata.json",
+      "app/CHANGELOG.md",
+      "app/README.md",
+      "app/electron-builder.config.json"
     ]
   },
   "nextEasyWins": [
     {
-      "task": "Add a focused WCAG 2.2 AA pass for keyboard flow, labels, contrast, and focus states.",
-      "whyItMatters": "WCAG 2.2 AA is part of the selected analysis profile.",
+      "task": "Commit uncommitted changes",
+      "whyItMatters": "Keeping a clean working directory prevents accidental loss of work and makes context switching easier.",
       "difficulty": "Easy",
-      "estimatedTime": "30 min",
+      "estimatedTime": "15 min",
       "filesLikelyInvolved": [
-        "src\\App.tsx",
-        "src\\main.tsx",
-        "src\\components\\ProgressBar.tsx",
-        "src\\components\\ScoreRadar.tsx"
-      ]
-    },
-    {
-      "task": "Add or verify the web app manifest and deployment checklist.",
-      "whyItMatters": "Web/PWA publishing readiness is part of the selected analysis profile.",
-      "difficulty": "Easy",
-      "estimatedTime": "30 min",
-      "filesLikelyInvolved": [
-        "package.json",
-        "README.md",
-        "public/manifest.json"
+        "app/.easywins/agent-notes.md",
+        "app/.easywins/metadata.json",
+        "app/CHANGELOG.md",
+        "app/README.md",
+        "app/electron-builder.config.json"
       ]
     }
   ],
   "todayPlan": [
     {
-      "task": "Add a focused WCAG 2.2 AA pass for keyboard flow, labels, contrast, and focus states.",
+      "task": "Commit uncommitted changes",
       "filesToOpen": [
-        "src\\App.tsx",
-        "src\\main.tsx",
-        "src\\components\\ProgressBar.tsx",
-        "src\\components\\ScoreRadar.tsx"
+        "app/.easywins/agent-notes.md",
+        "app/.easywins/metadata.json",
+        "app/CHANGELOG.md",
+        "app/README.md",
+        "app/electron-builder.config.json"
       ],
-      "successLooksLike": "Add a focused WCAG 2.2 AA pass for keyboard flow, labels, contrast, and focus states is completed and committed"
+      "successLooksLike": "Commit uncommitted changes is completed and committed"
     },
     {
-      "task": "Add or verify the web app manifest and deployment checklist.",
+      "task": "Commit or stash uncommitted changes",
       "filesToOpen": [
-        "package.json",
-        "README.md",
-        "public/manifest.json"
+        "app/.easywins/agent-notes.md",
+        "app/.easywins/metadata.json",
+        "app/CHANGELOG.md"
       ],
-      "successLooksLike": "Add or verify the web app manifest and deployment checklist is completed"
+      "successLooksLike": "Working directory is clean (git status shows no changes)"
     }
   ],
   "provenance": {
-    "fileCount": 170,
-    "sourceFileCount": 84,
+    "fileCount": 175,
+    "sourceFileCount": 85,
     "testFileCount": 5,
     "hasTests": true,
     "hasCiCd": true,
