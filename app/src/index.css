@@ -15,7 +15,7 @@
     --border-focus: #3D8BFF;
     --text-primary: #E8ECF1;
     --text-secondary: #8B92A5;
-    --text-muted: #5A6070;
+    --text-muted: #737B8E;
     --accent-blue: #3D8BFF;
     --accent-cyan: #00D4FF;
     --accent-green: #10B981;
@@ -56,6 +56,11 @@
 
   * {
     @apply border-border;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--border-focus);
+    outline-offset: 3px;
   }
 
   code, .font-mono {
@@ -114,4 +119,15 @@
 
 .animate-fade-in {
   animation: fade-in 0.3s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
