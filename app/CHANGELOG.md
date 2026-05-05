@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.2
+
+- Added GitHub-facing README and release readiness documentation.
+- Documented the completed WCAG 2.2 AA dashboard pass.
+- Added a root GitHub Actions workflow for the app workspace.
+
 ## 0.4.1
 
 - Polished generated today-plan completion wording.
