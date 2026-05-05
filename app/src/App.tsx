@@ -182,6 +182,40 @@ const DEFAULT_ANALYSIS_PROFILE: AnalysisProfile = {
   notes: "",
 };
 
+const PROFILE_OPTION_HELP: Record<string, string> = {
+  "Solo/Indie": "Checks whether the project is practical for a small team or solo builder to maintain and ship.",
+  Launch: "Looks for the basics needed before sharing the project with real users.",
+  Accessibility: "Reviews how usable the project is for people using keyboards, screen readers, or assistive settings.",
+  Publishing: "Checks whether the project has the files and documentation needed for release channels.",
+  Security: "Looks for common safety, secrets, dependency, and configuration risks.",
+  "Enterprise Readiness": "Reviews whether the project has the governance, support, and compliance signals larger organizations expect.",
+  Web: "Use this for browser apps, websites, dashboards, or progressive web apps.",
+  Mobile: "Use this for phone or tablet apps.",
+  Desktop: "Use this for installed apps on Windows, macOS, or Linux.",
+  "Server/API": "Use this for backend services, APIs, workers, or databases.",
+  "CLI/Tool": "Use this for command-line tools, local utilities, scripts, or developer tools.",
+  Game: "Use this for playable games or interactive game prototypes.",
+  Android: "Checks Android-specific release, accessibility, and platform expectations.",
+  iOS: "Checks iPhone and iPad release, accessibility, and platform expectations.",
+  Linux: "Checks Linux packaging, compatibility, and runtime expectations.",
+  Windows: "Checks Windows packaging, installer, and runtime expectations.",
+  macOS: "Checks macOS packaging, signing, notarization, and runtime expectations.",
+  "WCAG 2.2 AA": "The common web accessibility target for keyboard access, labels, focus states, and readable contrast.",
+  "WCAG 2.2 AAA": "A stricter accessibility target with higher contrast and more demanding usability requirements.",
+  "Section 508": "Accessibility requirements commonly used for US government and public-sector software.",
+  "Apple HIG accessibility": "Apple's accessibility expectations for iOS, iPadOS, and macOS apps.",
+  "Android accessibility": "Android accessibility expectations for touch targets, TalkBack, labels, and platform behavior.",
+  "Steam Deck accessibility": "Checks whether a game is usable on Steam Deck controls, display, and input constraints.",
+  "Web/PWA": "Checks browser deployment, installability, metadata, and web release readiness.",
+  Steam: "Checks store page, build, controller, and release expectations for Steam.",
+  "Apple App Store": "Checks metadata, platform rules, privacy labels, and submission readiness for Apple's stores.",
+  "Google Play": "Checks Android store metadata, policy, signing, and release readiness.",
+  "Microsoft Store": "Checks packaging, identity, metadata, and submission readiness for Microsoft Store.",
+  "Mac notarized app": "Checks signing and notarization requirements for distributing a macOS app.",
+  "Linux package": "Checks whether the app is ready for Linux package distribution.",
+  "GitHub release": "Checks whether release notes, artifacts, and repository metadata are ready for GitHub Releases.",
+};
+
 interface SavedAnalysis {
   id: string;
   path: string;
@@ -708,12 +742,16 @@ function ProfileChip<T extends string>({
   disabled: boolean;
   onClick: () => void;
 }) {
+  const helpText = PROFILE_OPTION_HELP[label] || `Include ${label} in this analysis.`;
+
   return (
     <button
       type="button"
       aria-pressed={selected}
+      aria-label={`${label}. ${helpText}`}
       disabled={disabled}
       onClick={onClick}
+      title={helpText}
       className="rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
       style={{
         backgroundColor: selected ? "rgba(61,139,255,0.12)" : "var(--bg-elevated)",
@@ -741,12 +779,18 @@ function AnalysisProfilePanel({
   profile,
   disabled,
   detecting,
+  analyzeDisabled,
+  loading,
   onChange,
+  onAnalyze,
 }: {
   profile: AnalysisProfile;
   disabled: boolean;
   detecting: boolean;
+  analyzeDisabled: boolean;
+  loading: boolean;
   onChange: (profile: AnalysisProfile) => void;
+  onAnalyze: () => void;
 }) {
   const update = (patch: Partial<AnalysisProfile>) => onChange({ ...profile, ...patch });
   const readinessFocuses: AnalysisReadinessFocus[] = profile.readinessFocuses?.length ? profile.readinessFocuses : ["Solo/Indie"];
@@ -838,6 +882,27 @@ function AnalysisProfilePanel({
           placeholder="Project context, audience, launch constraints..."
         />
       </label>
+      <div className="mt-4 flex justify-end">
+        <button
+          type="button"
+          onClick={onAnalyze}
+          disabled={analyzeDisabled}
+          className="h-11 px-6 rounded-lg text-sm font-semibold text-white flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 active:scale-[0.98]"
+          style={{ backgroundColor: "var(--accent-blue)" }}
+        >
+          {loading ? (
+            <>
+              <Loader size={16} className="animate-spin-loader" />
+              Scanning...
+            </>
+          ) : (
+            <>
+              Analyze Project
+              <ArrowRight size={16} />
+            </>
+          )}
+        </button>
+      </div>
     </div>
   );
 }
@@ -1289,25 +1354,6 @@ export default function App() {
                 onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-subtle)")}
               />
             </div>
-            <button
-              type="button"
-              onClick={handleAnalyze}
-              disabled={profileDisabled || !path.trim()}
-              className="h-11 px-6 rounded-lg text-sm font-semibold text-white flex items-center justify-center gap-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110 active:scale-[0.98]"
-              style={{ backgroundColor: "var(--accent-blue)" }}
-            >
-              {loading ? (
-                <>
-                  <Loader size={16} className="animate-spin-loader" />
-                  Scanning...
-                </>
-              ) : (
-                <>
-                  Analyze Project
-                  <ArrowRight size={16} />
-                </>
-              )}
-            </button>
           </div>
           <p className="mt-2.5 text-xs" style={{ color: "var(--text-muted)" }}>
             Enter an absolute path to a local project directory. We'll scan it and generate a report.
@@ -1319,7 +1365,10 @@ export default function App() {
             profile={analysisProfile}
             disabled={profileDisabled}
             detecting={detectingProfile}
+            analyzeDisabled={profileDisabled || !path.trim()}
+            loading={loading}
             onChange={setAnalysisProfile}
+            onAnalyze={handleAnalyze}
           />
         )}
 
