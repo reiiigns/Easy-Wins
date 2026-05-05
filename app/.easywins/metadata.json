@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "easy-wins",
+    "path": "i:\\Project Tracker\\app",
+    "gitBranch": null,
+    "lastCommit": null,
+    "hasUncommittedChanges": false
+  },
+  "analysis": {
+    "analyzedAt": "2026-05-05T11:34:30.176Z",
+    "source": "api/analyze",
+    "confidence": "Medium",
+    "stage": "Production-ready",
+    "overallScore": 100
+  },
+  "analysisProfile": {
+    "platforms": [
+      "Web"
+    ],
+    "osTargets": [],
+    "readinessFocuses": [
+      "Solo/Indie"
+    ],
+    "accessibilityStandards": [
+      "WCAG 2.2 AA"
+    ],
+    "publishingTargets": [
+      "Web/PWA",
+      "GitHub release"
+    ]
+  },
+  "activeWin": {
+    "task": "Add a focused WCAG 2.2 AA pass for keyboard flow, labels, contrast, and focus states.",
+    "whyItMatters": "WCAG 2.2 AA is part of the selected analysis profile.",
+    "difficulty": "Easy",
+    "estimatedTime": "30 min",
+    "filesLikelyInvolved": [
+      "src\\App.tsx",
+      "src\\main.tsx",
+      "src\\components\\ProgressBar.tsx",
+      "src\\components\\ScoreRadar.tsx"
+    ]
+  },
+  "nextEasyWins": [
+    {
+      "task": "Add a focused WCAG 2.2 AA pass for keyboard flow, labels, contrast, and focus states.",
+      "whyItMatters": "WCAG 2.2 AA is part of the selected analysis profile.",
+      "difficulty": "Easy",
+      "estimatedTime": "30 min",
+      "filesLikelyInvolved": [
+        "src\\App.tsx",
+        "src\\main.tsx",
+        "src\\components\\ProgressBar.tsx",
+        "src\\components\\ScoreRadar.tsx"
+      ]
+    },
+    {
+      "task": "Add or verify the web app manifest and deployment checklist.",
+      "whyItMatters": "Web/PWA publishing readiness is part of the selected analysis profile.",
+      "difficulty": "Easy",
+      "estimatedTime": "30 min",
+      "filesLikelyInvolved": [
+        "package.json",
+        "README.md",
+        "public/manifest.json"
+      ]
+    }
+  ],
+  "todayPlan": [
+    {
+      "task": "Add a focused WCAG 2.2 AA pass for keyboard flow, labels, contrast, and focus states.",
+      "filesToOpen": [
+        "src\\App.tsx",
+        "src\\main.tsx",
+        "src\\components\\ProgressBar.tsx",
+        "src\\components\\ScoreRadar.tsx"
+      ],
+      "successLooksLike": "Add a focused WCAG 2.2 AA pass for keyboard flow, labels, contrast, and focus states is completed and committed"
+    },
+    {
+      "task": "Add or verify the web app manifest and deployment checklist.",
+      "filesToOpen": [
+        "package.json",
+        "README.md",
+        "public/manifest.json"
+      ],
+      "successLooksLike": "Add or verify the web app manifest and deployment checklist is completed"
+    }
+  ],
+  "provenance": {
+    "fileCount": 170,
+    "sourceFileCount": 84,
+    "testFileCount": 5,
+    "hasTests": true,
+    "hasCiCd": true,
+    "hasDocker": true
+  }
+}
