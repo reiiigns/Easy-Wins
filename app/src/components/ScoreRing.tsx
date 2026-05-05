@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 interface ScoreRingProps {
   score: number;
+  label?: string;
   size?: number;
   strokeWidth?: number;
   showPercent?: boolean;
@@ -13,22 +14,30 @@ function getScoreColor(score: number): string {
   return "#EF4444";
 }
 
-export default function ScoreRing({ score, size = 64, strokeWidth = 4, showPercent = false }: ScoreRingProps) {
+export default function ScoreRing({ score, label = "Score", size = 64, strokeWidth = 4, showPercent = false }: ScoreRingProps) {
   const [animatedScore, setAnimatedScore] = useState(0);
+  const normalizedScore = Math.max(0, Math.min(100, Math.round(score)));
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (animatedScore / 100) * circumference;
-  const color = getScoreColor(score);
-  const displayScore = Math.round(score);
-  const label = showPercent ? `${displayScore}%` : `${displayScore}`;
+  const color = getScoreColor(normalizedScore);
+  const displayScore = normalizedScore;
+  const displayLabel = showPercent ? `${displayScore}%` : `${displayScore}`;
 
   useEffect(() => {
-    const timer = setTimeout(() => setAnimatedScore(score), 50);
+    const timer = setTimeout(() => setAnimatedScore(normalizedScore), 50);
     return () => clearTimeout(timer);
-  }, [score]);
+  }, [normalizedScore]);
 
   return (
-    <svg width={size} height={size} className="transform -rotate-90">
+    <svg
+      width={size}
+      height={size}
+      role="img"
+      aria-label={`${label}: ${displayScore} out of 100`}
+      className="transform -rotate-90"
+    >
+      <title>{`${label}: ${displayScore} out of 100`}</title>
       {/* Track */}
       <circle
         cx={size / 2}
@@ -62,7 +71,7 @@ export default function ScoreRing({ score, size = 64, strokeWidth = 4, showPerce
         fontSize={showPercent ? Math.max(13, Math.round(size * 0.22)) : size === 64 ? 18 : size === 80 ? 22 : 16}
         fontWeight={700}
       >
-        {label}
+        {displayLabel}
       </text>
     </svg>
   );
