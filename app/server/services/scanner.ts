@@ -306,6 +306,8 @@ async function findConfigFiles(projectPath: string): Promise<string[]> {
     "docker-compose*",
     "tailwind*",
     "postcss*",
+    "manifest.json",
+    "public/manifest.json",
     "jest*",
     "vitest*",
     "playwright*",
@@ -403,10 +405,6 @@ async function findTodoComments(projectPath: string, files: string[]): Promise<T
 }
 
 async function getGitInfo(projectPath: string) {
-  if (!hasGitMetadata(projectPath)) {
-    return emptyGitInfo();
-  }
-
   const git: SimpleGit = simpleGit(projectPath);
 
   try {
@@ -447,10 +445,6 @@ async function getGitInfo(projectPath: string) {
   } catch {
     return emptyGitInfo();
   }
-}
-
-function hasGitMetadata(projectPath: string): boolean {
-  return fsSync.existsSync(path.join(projectPath, ".git"));
 }
 
 function emptyGitInfo() {
