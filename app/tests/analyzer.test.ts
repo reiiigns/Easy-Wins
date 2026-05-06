@@ -23,6 +23,48 @@ test("heuristic analyzer can award mature production signals", async () => {
   });
 });
 
+test("heuristic analyzer gives concrete UI UX polish guidance for nested apps", async () => {
+  process.env.ANALYZER_PROVIDER = "heuristics";
+  const { analyzeProject } = await import("../server/services/analyzer");
+  const summary = createMatureSummary();
+  summary.projectPath = "/workspace";
+  summary.packageJson = {
+    name: "workspace-root",
+    scripts: {},
+    dependencies: {},
+    devDependencies: {},
+  };
+  summary.srcFiles = [
+    "app/src/main.tsx",
+    "app/src/App.tsx",
+    "app/src/accessibility-checklist.ts",
+    "app/src/components/Dashboard.tsx",
+    "app/src/components/ProgressBar.tsx",
+    "app/src/components/ScoreRadar.tsx",
+  ];
+  summary.configFiles = [
+    "app/components.json",
+    "app/postcss.config.js",
+    "app/tailwind.config.js",
+  ];
+  summary.fileTypeCounts = {
+    ".css": 1,
+    ".ts": 2,
+    ".tsx": 5,
+  };
+  summary.readmeContent = [
+    "# Project Tracker",
+    "WCAG keyboard focus states are reviewed.",
+    "The dashboard includes responsive layout, mobile checks, and empty states.",
+  ].join("\n");
+
+  const report = await analyzeProject(summary);
+  const uiRow = report.trackerTable.find(row => row.area === "UI/UX Polish");
+
+  assert.ok(report.scores.uiUxPolish >= 80);
+  assert.equal(uiRow?.nextAction, "Audit mobile layout, empty states, focus rings, and chart readability");
+});
+
 test("heuristic today plan uses polished completion wording", async () => {
   process.env.ANALYZER_PROVIDER = "heuristics";
   const { analyzeProject } = await import("../server/services/analyzer");
