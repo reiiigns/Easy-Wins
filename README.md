@@ -72,6 +72,8 @@ Before publishing a GitHub release:
 - Add release notes to `app/CHANGELOG.md`.
 - Run `npm run typecheck`, `npm test`, and `npm run build` from `app/`.
 - Build desktop artifacts with `npm run electron:build` when shipping an installer.
+- For macOS releases, complete code signing and notarization before publishing DMG or ZIP artifacts.
+- For Linux releases, verify AppImage/deb packaging, desktop metadata, icon rendering, and install instructions.
 - Attach release artifacts and checksums where applicable.
 - Confirm WCAG notes, keyboard flow, labels, focus states, and reduced-motion behavior are still current.
 
