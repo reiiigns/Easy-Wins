@@ -373,6 +373,13 @@ function calculateScores(summary: ScanSummary) {
   if (hasDependency(summary, ["recharts", "chart", "d3"])) s.uiUxPolish += 6;
   if (hasDependency(summary, ["@radix-ui", "cmdk", "vaul"])) s.uiUxPolish += 7;
   if (hasConfig(summary, ["postcss"])) s.uiUxPolish += 4;
+  if (hasSourcePath(summary, ["src/app", "src/main"])) s.uiUxPolish += 8;
+  if (hasSourcePath(summary, ["scoreradar", "scorering", "progressbar", "dashboard"])) s.uiUxPolish += 7;
+  if (hasSourcePath(summary, ["accessibility", "a11y"]) || readmeIncludes(summary, ["wcag", "keyboard", "focus states"])) {
+    s.uiUxPolish += 8;
+  }
+  if (hasConfig(summary, ["components.json", "tailwind", "postcss"])) s.uiUxPolish += 5;
+  if (readmeIncludes(summary, ["empty states", "responsive", "mobile", "accessibility"])) s.uiUxPolish += 4;
   if (summary.fileTypeCounts[".css"] || summary.fileTypeCounts[".scss"] || summary.fileTypeCounts[".less"]) {
     s.uiUxPolish += 10;
   }
@@ -1179,6 +1186,26 @@ function stabilityAction(summary: ScanSummary): string {
   return "Expand coverage around edge cases";
 }
 
+function uiUxAction(summary: ScanSummary, score: number): string {
+  const hasUiEntry = hasSourcePath(summary, ["src/app", "src/main", "src/pages", "app/page"]);
+  const hasComponents = hasSourcePath(summary, ["src/components", "components/ui"]);
+  const hasStyling = hasConfig(summary, ["tailwind", "postcss", "components.json"]) ||
+    Boolean(summary.fileTypeCounts[".css"] || summary.fileTypeCounts[".scss"] || summary.fileTypeCounts[".less"]);
+  const hasAccessibilitySignal = hasDependency(summary, ["@axe-core", "axe-core", "jest-axe"]) ||
+    hasSourcePath(summary, ["accessibility", "a11y"]) ||
+    readmeIncludes(summary, ["wcag", "keyboard", "focus states"]);
+  const hasReportUi = hasSourcePath(summary, ["scoreradar", "scorering", "progressbar", "dashboard"]) ||
+    hasDependency(summary, ["recharts", "chart", "d3"]);
+
+  if (!hasUiEntry) return "Add a clear UI entry point for the primary workflow";
+  if (!hasStyling) return "Define spacing, type, color, and responsive layout styles";
+  if (!hasComponents) return "Extract repeated screens into reusable UI components";
+  if (!hasAccessibilitySignal) return "Add keyboard, focus, label, and contrast verification";
+  if (!hasReportUi) return "Make score, status, and next-action views easier to scan";
+  if (score < 85) return "Audit mobile layout, empty states, focus rings, and chart readability";
+  return "Run a final UI QA pass for mobile density, hover states, and empty states";
+}
+
 function deploymentAction(summary: ScanSummary): string {
   if (isJavaScriptProject(summary) && !hasBuildScript(summary)) return "Add a production build script";
   if (!hasCiSignal(summary)) return "Set up CI to run build and tests";
@@ -1218,9 +1245,7 @@ function buildTrackerTable(summary: ScanSummary, scores: { overall: number; core
       status: trackerStatus(scores.uiUxPolish),
       completionPercent: scores.uiUxPolish,
       priority: scores.uiUxPolish < 30 ? "Medium" as const : "Low" as const,
-      nextAction: scores.uiUxPolish < 50
-        ? "Add styling, responsive states, and interaction polish"
-        : "Refine visual details and accessibility states",
+      nextAction: uiUxAction(summary, scores.uiUxPolish),
     },
     {
       area: "Code Quality",
