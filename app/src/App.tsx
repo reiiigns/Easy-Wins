@@ -256,6 +256,34 @@ interface AchievementTier {
   nextAt: number | null;
 }
 
+interface ScoreSummaryItem {
+  label: string;
+  value: number;
+}
+
+function buildScoreSummary(scores: ProjectReport["scores"]): ScoreSummaryItem[] {
+  return [
+    { label: "Core Functionality", value: scores.coreFunctionality },
+    { label: "UI/UX Polish", value: scores.uiUxPolish },
+    { label: "Code Quality", value: scores.codeQuality },
+    { label: "Stability & Bugs", value: scores.stabilityBugs },
+    { label: "Performance", value: scores.performance },
+    { label: "Documentation", value: scores.documentation },
+    { label: "Deployment Readiness", value: scores.deploymentReadiness },
+  ];
+}
+
+function getScoreColorToken(value: number): string {
+  if (value >= 80) return "var(--accent-green)";
+  if (value >= 50) return "var(--accent-yellow)";
+  return "var(--accent-red)";
+}
+
+function getLowestScoreAction(report: ProjectReport, lowestScore: ScoreSummaryItem): string {
+  const trackerRow = report.trackerTable.find(row => row.area === lowestScore.label);
+  return trackerRow?.nextAction || "Review the project tracker row for the next improvement.";
+}
+
 function getAnalysisId(projectPath: string): string {
   return projectPath.trim().replace(/\\/g, "/").replace(/\/+$/g, "").toLowerCase();
 }
@@ -1301,6 +1329,11 @@ export default function App() {
     : null;
   const activeProjectName = activeSavedAnalysis?.name || report?.projectName || getProjectNameFromPath(path);
   const profileDisabled = loading || selectingFolder || detectingProfile;
+  const scoreSummary = report ? buildScoreSummary(report.scores) : [];
+  const lowestScore = scoreSummary.length > 0
+    ? scoreSummary.reduce((lowest, item) => item.value < lowest.value ? item : lowest, scoreSummary[0])
+    : null;
+  const lowestScoreAction = report && lowestScore ? getLowestScoreAction(report, lowestScore) : "";
 
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-gradient)" }}>
@@ -1549,15 +1582,7 @@ export default function App() {
                 Completion Scores
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {[
-                  { label: "Core Functionality", value: report.scores.coreFunctionality },
-                  { label: "UI/UX Polish", value: report.scores.uiUxPolish },
-                  { label: "Code Quality", value: report.scores.codeQuality },
-                  { label: "Stability & Bugs", value: report.scores.stabilityBugs },
-                  { label: "Performance", value: report.scores.performance },
-                  { label: "Documentation", value: report.scores.documentation },
-                  { label: "Deployment Readiness", value: report.scores.deploymentReadiness },
-                ].map((item) => (
+                {scoreSummary.map((item) => (
                   <div
                     key={item.label}
                     className="app-card rounded-xl border p-5 animate-fade-in"
@@ -1572,12 +1597,7 @@ export default function App() {
                     <p
                       className="text-[32px] font-bold leading-none"
                       style={{
-                        color:
-                          item.value >= 80
-                            ? "var(--accent-green)"
-                            : item.value >= 50
-                            ? "var(--accent-yellow)"
-                            : "var(--accent-red)",
+                        color: getScoreColorToken(item.value),
                       }}
                     >
                       {item.value}%
@@ -1600,10 +1620,50 @@ export default function App() {
                 <Braces size={20} style={{ color: "var(--accent-cyan)" }} />
                 Score Overview
               </h3>
-              <div className="flex justify-center">
-                <Suspense fallback={<div className="h-80 w-full" />}>
-                  <ScoreRadar scores={report.scores} />
-                </Suspense>
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(320px,1fr)_360px] lg:items-center">
+                <div className="min-h-[320px]">
+                  <Suspense fallback={<div className="h-80 w-full" />}>
+                    <ScoreRadar scores={report.scores} />
+                  </Suspense>
+                </div>
+                <div className="space-y-3">
+                  {lowestScore && (
+                    <div
+                      className="rounded-lg border p-4"
+                      style={{ backgroundColor: "var(--bg-elevated)", borderColor: "var(--border-subtle)" }}
+                    >
+                      <p className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>
+                        Lowest score
+                      </p>
+                      <div className="mt-2 flex items-center justify-between gap-3">
+                        <p className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+                          {lowestScore.label}
+                        </p>
+                        <span className="text-sm font-bold tabular-nums" style={{ color: getScoreColorToken(lowestScore.value) }}>
+                          {lowestScore.value}%
+                        </span>
+                      </div>
+                      <p className="mt-2 text-[13px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                        {lowestScoreAction}
+                      </p>
+                    </div>
+                  )}
+                  <div className="space-y-2">
+                    {scoreSummary.map(item => (
+                      <div key={item.label}>
+                        <div className="mb-1 flex items-center justify-between gap-3">
+                          <span className="text-xs" style={{ color: "var(--text-secondary)" }}>
+                            {item.label}
+                          </span>
+                          <span className="text-xs tabular-nums" style={{ color: getScoreColorToken(item.value) }}>
+                            {item.value}%
+                          </span>
+                        </div>
+                        <ProgressBar value={item.value} label={`${item.label} overview score`} height={5} animated={false} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1667,7 +1727,14 @@ export default function App() {
                   Needs Fixing
                 </h3>
                 <div className="space-y-0">
-                  {report.needsFixing.map((item, i) => (
+                  {report.needsFixing.length === 0 ? (
+                    <div
+                      className="rounded-lg border px-3 py-3 text-sm"
+                      style={{ backgroundColor: "var(--bg-elevated)", borderColor: "var(--border-subtle)", color: "var(--text-secondary)" }}
+                    >
+                      No blocking fixes were detected in this analysis.
+                    </div>
+                  ) : report.needsFixing.map((item, i) => (
                     <div
                       key={i}
                       className="py-3"
@@ -1710,7 +1777,14 @@ export default function App() {
                 High-impact tasks you can knock out quickly
               </p>
               <div className="space-y-3">
-                {report.nextEasyWins.map((win, i) => (
+                {report.nextEasyWins.length === 0 ? (
+                  <div
+                    className="rounded-lg border px-3 py-3 text-sm"
+                    style={{ backgroundColor: "var(--bg-elevated)", borderColor: "var(--border-subtle)", color: "var(--text-secondary)" }}
+                  >
+                    No quick wins are queued right now.
+                  </div>
+                ) : report.nextEasyWins.map((win, i) => (
                   <div
                     key={i}
                     className="rounded-lg border p-4 transition-all hover:border-[var(--accent-blue)]"
@@ -1760,7 +1834,7 @@ export default function App() {
                 Project Tracker
               </h3>
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-[920px] table-auto">
                   <thead>
                     <tr style={{ borderBottom: "2px solid var(--border-subtle)" }}>
                       {["Area", "Status", "Completion", "Priority", "Next Action"].map((h) => (
@@ -1801,7 +1875,7 @@ export default function App() {
                           <PriorityBadge priority={row.priority} />
                         </td>
                         <td
-                          className="px-4 py-3.5 text-[13px] max-w-[300px] truncate"
+                          className="min-w-[300px] px-4 py-3.5 text-[13px] leading-relaxed whitespace-normal"
                           style={{ color: "var(--text-secondary)" }}
                         >
                           {row.nextAction}
