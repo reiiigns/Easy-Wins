@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "project": {
+    "name": "project-tracker",
+    "path": "I:\\Project Tracker",
+    "gitBranch": "main",
+    "lastCommit": "2a51910 - Log release readiness session (2026-05-06T08:55:06+09:00)",
+    "hasUncommittedChanges": true
+  },
+  "analysis": {
+    "analyzedAt": "2026-05-06T00:07:28.643Z",
+    "source": "api/analyze",
+    "confidence": "Medium",
+    "stage": "Production-ready",
+    "overallScore": 90
+  },
+  "analysisProfile": {
+    "platforms": [
+      "Desktop",
+      "Web",
+      "Server/API"
+    ],
+    "osTargets": [
+      "Windows",
+      "macOS",
+      "Linux"
+    ],
+    "readinessFocuses": [
+      "Launch"
+    ],
+    "accessibilityStandards": [
+      "WCAG 2.2 AA"
+    ],
+    "publishingTargets": [
+      "Web/PWA",
+      "GitHub release",
+      "Microsoft Store",
+      "Mac notarized app",
+      "Linux package"
+    ]
+  },
+  "activeWin": {
+    "task": "Commit uncommitted changes",
+    "whyItMatters": "Keeping a clean working directory prevents accidental loss of work and makes context switching easier.",
+    "difficulty": "Easy",
+    "estimatedTime": "15 min",
+    "filesLikelyInvolved": [
+      "README.md",
+      "app/server/services/scanner.ts",
+      ".easywins/agent-notes.md",
+      ".easywins/history.jsonl",
+      ".easywins/metadata.json"
+    ]
+  },
+  "nextEasyWins": [
+    {
+      "task": "Commit uncommitted changes",
+      "whyItMatters": "Keeping a clean working directory prevents accidental loss of work and makes context switching easier.",
+      "difficulty": "Easy",
+      "estimatedTime": "15 min",
+      "filesLikelyInvolved": [
+        "README.md",
+        "app/server/services/scanner.ts",
+        ".easywins/agent-notes.md",
+        ".easywins/history.jsonl",
+        ".easywins/metadata.json"
+      ]
+    }
+  ],
+  "todayPlan": [
+    {
+      "task": "Commit uncommitted changes",
+      "filesToOpen": [
+        "README.md",
+        "app/server/services/scanner.ts",
+        ".easywins/agent-notes.md",
+        ".easywins/history.jsonl",
+        ".easywins/metadata.json"
+      ],
+      "successLooksLike": "Commit uncommitted changes is completed and committed"
+    },
+    {
+      "task": "Commit or stash uncommitted changes",
+      "filesToOpen": [
+        "README.md",
+        "app/server/services/scanner.ts",
+        ".easywins/agent-notes.md"
+      ],
+      "successLooksLike": "Working directory is clean (git status shows no changes)"
+    }
+  ],
+  "provenance": {
+    "fileCount": 204,
+    "sourceFileCount": 87,
+    "testFileCount": 5,
+    "hasTests": true,
+    "hasCiCd": true,
+    "hasDocker": false
+  }
+}
