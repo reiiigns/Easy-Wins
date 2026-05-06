@@ -1,15 +1,15 @@
 # Easy Wins Agent Notes
 
 Project: project-tracker
-Last analyzed: 2026-05-06T00:07:28.643Z
+Last analyzed: 2026-05-06T00:09:28.319Z
 Overall score: 90%
 Stage: Production-ready
 
 ## Active Win
 
-Commit uncommitted changes
+No active win selected.
 
-Start here: README.md, app/server/services/scanner.ts, .easywins/agent-notes.md, .easywins/history.jsonl, .easywins/metadata.json
+Start here: open your terminal
 
 ## Agent Ritual
 
