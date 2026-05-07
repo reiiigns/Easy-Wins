@@ -20,8 +20,6 @@
   <img src="https://img.shields.io/badge/license-MIT-20232a" alt="MIT license">
 </p>
 
-![Easy Wins dashboard mockup](app/public/site/easywins_gh_mockup.png)
-
 Easy Wins scans a local project folder, reads its code and docs, and returns a practical dashboard for project stage, readiness, risks, and the next small task worth doing. It is built for local projects where the next useful move matters more than another planning board.
 
 ## What It Does
@@ -36,7 +34,7 @@ Easy Wins scans a local project folder, reads its code and docs, and returns a p
 ## Product Preview
 
 <p align="center">
-  <img src="app/public/site/easywins_mobile_mockup.png" alt="Easy Wins mobile mockup" width="260">
+  <img src="app/public/site/easywins_desktop_preview.png" alt="Easy Wins desktop preview">
 </p>
 
 The launch story is simple: choose a project folder, scan it, review readiness, then start with the next focused win.
