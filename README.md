@@ -1,23 +1,51 @@
+<p align="center">
+  <img src="app/public/easywins-logo.svg" alt="Easy Wins logo" width="96" height="96">
+</p>
+
 # Easy Wins Project Tracker
 
-Local project analysis for builders who want a clear answer to: "What should I work on next?"
+<p align="center">
+  <strong>Know what to work on next.</strong>
+</p>
 
-[![CI](https://github.com/reiiigns/project-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/reiiigns/project-tracker/actions/workflows/ci.yml)
-![React](https://img.shields.io/badge/React-19-20232a?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.9-20232a?logo=typescript)
-![Vite](https://img.shields.io/badge/Vite-7-20232a?logo=vite)
-![License](https://img.shields.io/badge/license-MIT-20232a)
+<p align="center">
+  Local-first project analysis for builders who want practical readiness checks, clear risk signals, and one small useful task to do next.
+</p>
 
-Easy Wins scans a local project folder, reads its code and docs, and returns a practical dashboard with project stage, completion scores, risks, readiness checks, and the next small useful task. It is designed for local-first development: use the heuristic analyzer immediately, connect a local llama.cpp model for offline AI, or opt into OpenAI analysis when configured.
+<p align="center">
+  <a href="https://github.com/reiiigns/project-tracker/actions/workflows/ci.yml"><img src="https://github.com/reiiigns/project-tracker/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/React-19-20232a?logo=react" alt="React 19">
+  <img src="https://img.shields.io/badge/TypeScript-5.9-20232a?logo=typescript" alt="TypeScript 5.9">
+  <img src="https://img.shields.io/badge/Vite-7-20232a?logo=vite" alt="Vite 7">
+  <img src="https://img.shields.io/badge/license-MIT-20232a" alt="MIT license">
+</p>
+
+![Easy Wins dashboard mockup](app/public/site/easywins_gh_mockup.png)
+
+Easy Wins scans a local project folder, reads its code and docs, and returns a practical dashboard for project stage, readiness, risks, and the next small task worth doing. It is built for local projects where the next useful move matters more than another planning board.
 
 ## What It Does
 
-- Scans project structure, docs, package files, source counts, TODOs, git status, tests, CI, Docker, and release signals.
-- Scores project health across core functionality, UI polish, code quality, stability, performance, documentation, and deployment readiness.
-- Generates a short "today plan" with file-level starting points.
+- Scans project structure, docs, package files, TODOs, git status, source counts, tests, CI, Docker, and release signals.
+- Scores core functionality, UI polish, code quality, stability, performance, documentation, and deployment readiness.
+- Generates high-impact, quick tasks with file-level starting points so the next step is specific, not motivational.
 - Supports analysis profiles for web, desktop, mobile, server/API, CLI, games, accessibility, and publishing targets.
-- Writes local `.easywins/` metadata so agents and humans can pick up the project context later.
+- Writes local `.easywins/` metadata so humans and agents can pick up the same project context later.
 - Runs as a Vite + React dashboard with an Express API, plus optional Electron packaging.
+
+## Product Preview
+
+<p align="center">
+  <img src="app/public/site/easywins_mobile_mockup.png" alt="Easy Wins mobile mockup" width="260">
+</p>
+
+The launch story is simple: choose a project folder, scan it, review readiness, then start with the next focused win.
+
+<p align="center">
+  <a href="app/public/site/easywins_video_mockup.mp4">
+    <img src="app/public/site/easywins_video_mockup_poster.png" alt="Easy Wins video mockup poster">
+  </a>
+</p>
 
 ## Current Readiness
 
@@ -42,21 +70,9 @@ Open [http://localhost:3000/site](http://localhost:3000/site).
 
 The API runs on [http://localhost:3001](http://localhost:3001), and the Vite dev server proxies `/api` requests to it.
 
-## Validation
-
-Run these from `app/`:
-
-```bash
-npm run typecheck
-npm test
-npm run build
-```
-
-The GitHub workflow runs `npm ci`, lint, typecheck, build, tests, and Docker build from the app directory.
-
 ## Analyzer Modes
 
-| Mode | Use When |
+| Mode | Use when |
 | --- | --- |
 | Heuristics | You want a fast, no-key baseline analysis. |
 | Local llama.cpp | You want offline AI analysis with a local GGUF model. |
@@ -64,35 +80,44 @@ The GitHub workflow runs `npm ci`, lint, typecheck, build, tests, and Docker bui
 
 Configuration lives in `app/.env.example`.
 
-## Release Checklist
+## Validation
 
-Before publishing a GitHub release:
+Run these from `app/` before shipping changes:
 
-- Update `app/package.json` version.
-- Add release notes to `app/CHANGELOG.md`.
-- Run `npm run typecheck`, `npm test`, and `npm run build` from `app/`.
-- Build desktop artifacts with `npm run electron:build` when shipping an installer.
-- For macOS releases, complete code signing and notarization before publishing DMG or ZIP artifacts.
-- For Linux releases, verify AppImage/deb packaging, desktop metadata, icon rendering, and install instructions.
-- Attach release artifacts and checksums where applicable.
-- Confirm WCAG notes, keyboard flow, labels, focus states, and reduced-motion behavior are still current.
+```bash
+npm run typecheck
+npm test
+npm run build
+```
 
-The full release checklist is in [app/docs/release-checklist.md](app/docs/release-checklist.md).
+For desktop artifacts:
+
+```bash
+npm run electron:build
+```
+
+The GitHub workflow runs install, lint, typecheck, build, tests, and Docker build from the app workspace.
 
 ## Repository Layout
 
 ```text
 .
-├── .github/workflows/ci.yml       # GitHub Actions checks
-├── app/                           # Product source
-│   ├── src/                       # React dashboard
-│   ├── server/                    # Express API and analyzer
-│   ├── tests/                     # Node test runner tests
-│   ├── docs/                      # Accessibility and release notes
-│   └── package.json
-├── AGENTS.md                      # Agent workflow guidance
-└── README.md                      # GitHub overview
+|-- .github/workflows/ci.yml       # GitHub Actions checks
+|-- app/                           # Product source
+|   |-- public/                    # Logo and launch media
+|   |-- src/                       # React dashboard and launch page
+|   |-- server/                    # Express API and analyzer
+|   |-- electron/                  # Desktop shell
+|   |-- tests/                     # Node test runner tests
+|   |-- docs/                      # Accessibility and release notes
+|   `-- package.json
+|-- AGENTS.md                      # Agent workflow guidance
+`-- README.md                      # GitHub overview
 ```
+
+## Release Notes
+
+Before publishing a GitHub release, update `app/package.json`, add notes to `app/CHANGELOG.md`, run validation, build desktop artifacts when needed, and attach installers/checksums from `app/release/`. The full checklist is in [app/docs/release-checklist.md](app/docs/release-checklist.md).
 
 ## License
 
