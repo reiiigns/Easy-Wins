@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Easy Wins logo</title>
+  <desc id="desc">A dark rounded square containing two project signal lines resolving into a blue path and green checkmark.</desc>
+  <rect width="512" height="512" rx="108" fill="#0B0C0F"/>
+  <rect x="120" y="124" width="272" height="38" rx="19" fill="#EEF1F5" opacity="0.86"/>
+  <rect x="120" y="222" width="226" height="38" rx="19" fill="#EEF1F5" opacity="0.64"/>
+  <path d="M120 322H288L351 385" fill="none" stroke="#2563EB" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M288 322L351 385L464 226" fill="none" stroke="#10B981" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
