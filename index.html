@@ -570,6 +570,37 @@
       margin: 16px auto 28px;
     }
 
+
+    .newsletter-section {
+      text-align: center;
+      background: rgba(255,255,255,0.03);
+      border-top: 1px solid var(--dark-border);
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .newsletter-section .container {
+      max-width: 680px;
+    }
+
+    .newsletter-section h2 {
+      margin-bottom: 10px;
+    }
+
+    .newsletter-section .lead {
+      margin: 0 auto 28px;
+      max-width: 480px;
+    }
+
+    .newsletter-embed {
+      border-radius: 8px;
+      border: none;
+      width: 100%;
+      max-width: 540px;
+      height: 180px;
+      display: block;
+      margin: 0 auto;
+    }
+
     .product-video {
       display: block;
       width: 100%;
@@ -868,6 +899,21 @@
             <div><h3>CI-backed validation</h3><p>The workflow covers install, lint, typecheck, build, tests, and Docker build from the app workspace.</p></div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="section newsletter-section" data-od-id="newsletter">
+      <div class="container">
+        <h2>Stay in the loop</h2>
+        <p class="lead">Updates, tips, and what ships next — straight to your inbox.</p>
+        <iframe
+          src="https://embeds.beehiiv.com/pub_e97527be-5b6b-4527-b1ea-143ceaf4e793?slim=true"
+          class="newsletter-embed"
+          title="Easy Wins newsletter signup"
+          frameborder="0"
+          scrolling="no"
+          loading="lazy"
+        ></iframe>
       </div>
     </section>
 
