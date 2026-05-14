@@ -1,91 +1,890 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Easy Wins — Launch Ready Out of the Box</title>
-    <meta name="description" content="The tool that tells you exactly what to work on next. Zero-config, local-first project analyzer for developers.">
-    <link rel="stylesheet" href="styles.css">
-    <!-- Cloudflare Web Analytics snippet here -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Easy Wins scans a local project folder and returns a practical dashboard with readiness scores, risks, and the next small task worth doing. Local-first, $19 one-time." />
+  <meta name="author" content="Easy Wins" />
+  <link rel="canonical" href="https://reiiigns.github.io/Easy-Wins/" />
+  <meta property="og:title" content="Easy Wins — Know What to Work on Next" />
+  <meta property="og:description" content="Scores your codebase and surfaces the one task with the highest return on your attention. No subscription. Local-first. $19 one-time." />
+  <meta property="og:image" content="https://reiiigns.github.io/Easy-Wins/assets/easywins_gh_mockup.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:url" content="https://reiiigns.github.io/Easy-Wins/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Easy Wins" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Easy Wins — Know What to Work on Next" />
+  <meta name="twitter:description" content="Scores your codebase and surfaces the one task with the highest return on your attention. No subscription. Local-first. $19 one-time." />
+  <meta name="twitter:image" content="https://reiiigns.github.io/Easy-Wins/assets/easywins_gh_mockup.png" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'><rect fill='%232563EB' width='28' height='28' rx='7'/><text x='50%' y='50%' font-size='13' font-weight='700' fill='white' text-anchor='middle' dominant-baseline='middle' font-family='system-ui'>EW</text></svg>" />
+  <title>Easy Wins — Know What to Work on Next</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --surface: #ffffff;
+      --surface-soft: #eef1f5;
+      --fg: #151820;
+      --muted: #525866;
+      --quiet: #737b8e;
+      --border: #dde2ea;
+      --nav-bg: rgba(247, 248, 250, 0.94);
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --dark: #0b0c0f;
+      --dark-card: #14161b;
+      --dark-elevated: #1a1d24;
+      --dark-border: #2a2e38;
+      --dark-text: #e8ecf1;
+      --dark-muted: #8b92a5;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", Consolas, "Liberation Mono", monospace;
+      --container: 1160px;
+      --radius: 8px;
+      color-scheme: light dark;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d0f14;
+        --surface: #151820;
+        --surface-soft: #101217;
+        --fg: #eef2f7;
+        --muted: #aab2c0;
+        --quiet: #858ea0;
+        --border: #28303d;
+        --nav-bg: rgba(13, 15, 20, 0.94);
+        --accent: #4f8cff;
+        --accent-hover: #76a6ff;
+        --dark: #07080b;
+        --dark-card: #11141b;
+        --dark-elevated: #171b24;
+        --dark-border: #303746;
+        --dark-text: #f3f6fb;
+        --dark-muted: #9ca6b8;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    p,
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+    }
+
+    .container {
+      width: min(calc(100% - 40px), var(--container));
+      margin-inline: auto;
+    }
+
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+
+    .topnav-inner {
+      display: flex;
+      min-height: 64px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--surface);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: var(--fg);
+    }
+
+    .btn {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      padding: 10px 16px;
+      font: inherit;
+      font-size: 15px;
+      font-weight: 650;
+      line-height: 1.2;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--fg);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--quiet);
+    }
+
+    .section {
+      padding-block: 72px;
+    }
+
+    .section + .section {
+      border-top: 1px solid var(--border);
+    }
+
+    .hero {
+      padding-block: 76px 64px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) minmax(480px, 1.12fr);
+      gap: 52px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.45;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      max-width: 11ch;
+      font-size: 56px;
+      font-weight: 650;
+      letter-spacing: 0;
+      line-height: 1.04;
+    }
+
+    h2 {
+      max-width: 17ch;
+      font-size: 34px;
+      font-weight: 650;
+      letter-spacing: 0;
+      line-height: 1.14;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 650;
+      letter-spacing: 0;
+      line-height: 1.3;
+    }
+
+    .lead {
+      max-width: 58ch;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .hero .lead {
+      margin-top: 22px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .hero-note {
+      max-width: 48ch;
+      color: var(--quiet);
+      font-size: 14px;
+      margin-top: 18px;
+    }
+
+    .product-frame {
+      overflow: hidden;
+      border: 1px solid var(--dark-border);
+      border-radius: 8px;
+      background: var(--dark);
+      color: var(--dark-text);
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .frame-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--dark-border);
+      background: #101217;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .window-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #3a3f4a;
+    }
+
+    .frame-title {
+      color: var(--dark-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 16px;
+      padding: 18px;
+      min-width: 0;
+    }
+
+    .panel {
+      border: 1px solid var(--dark-border);
+      border-radius: 8px;
+      background: var(--dark-card);
+      padding: 16px;
+      min-width: 0;
+    }
+
+    .panel-title {
+      color: var(--dark-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .score {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .score strong {
+      color: var(--dark-text);
+      font-size: 44px;
+      line-height: 1;
+    }
+
+    .score span {
+      color: var(--dark-muted);
+      font-size: 14px;
+    }
+
+    .stage {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(16, 185, 129, 0.32);
+      border-radius: 6px;
+      background: rgba(16, 185, 129, 0.12);
+      color: #6ee7b7;
+      font-size: 12px;
+      font-weight: 650;
+      padding: 4px 8px;
+      margin-top: 14px;
+    }
+
+    .bars {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 12px;
+      align-items: center;
+      color: var(--dark-muted);
+      font-size: 13px;
+    }
+
+    .bar-track {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--dark-elevated);
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: var(--accent);
+    }
+
+    .bar-fill.success {
+      background: var(--success);
+    }
+
+    .bar-fill.warning {
+      background: var(--warning);
+    }
+
+    .win-card {
+      grid-column: 1 / -1;
+      border-left: 3px solid var(--warning);
+    }
+
+    .win-card h3 {
+      color: var(--dark-text);
+      margin-bottom: 8px;
+    }
+
+    .win-card p {
+      color: var(--dark-muted);
+      font-size: 14px;
+    }
+
+    .path {
+      display: inline-flex;
+      max-width: 100%;
+      margin-top: 14px;
+      border: 1px solid var(--dark-border);
+      border-radius: 6px;
+      background: var(--dark-elevated);
+      color: #cbd5e1;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 6px 8px;
+      word-break: break-word;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 36px;
+    }
+
+    .section-heading .lead {
+      max-width: 43ch;
+      font-size: 16px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .feature-card {
+      min-height: 220px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 22px;
+    }
+
+    .feature-card svg {
+      width: 22px;
+      height: 22px;
+      color: var(--accent);
+      margin-bottom: 22px;
+    }
+
+    .feature-card p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .proof-card {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 24px;
+    }
+
+    .proof-card p {
+      color: var(--muted);
+      font-size: 15px;
+      margin-top: 8px;
+    }
+
+    .proof-meta {
+      color: var(--quiet);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    .readiness {
+      display: grid;
+      grid-template-columns: 0.86fr 1.14fr;
+      gap: 36px;
+      align-items: start;
+    }
+
+    .checklist {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .check-row {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 12px;
+      padding: 16px 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .check-row:first-child {
+      border-top: 0;
+    }
+
+    .check-row span {
+      display: grid;
+      width: 22px;
+      height: 22px;
+      place-items: center;
+      border-radius: 6px;
+      background: rgba(16, 185, 129, 0.14);
+      color: #047857;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .check-row p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 2px;
+    }
+
+    .code-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .code-pill {
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      background: var(--surface);
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      padding: 8px 10px;
+    }
+
+    .cta {
+      text-align: center;
+    }
+
+    .cta .container {
+      max-width: 680px;
+    }
+
+    .cta h2 {
+      max-width: none;
+      margin-inline: auto;
+    }
+
+    .cta .lead {
+      margin: 16px auto 28px;
+    }
+
+    .product-video {
+      display: block;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 12px;
+      border: 1px solid var(--dark-border);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
+    }
+
+    .video-section {
+      padding-block: 0 72px;
+      border-top: none !important;
+    }
+
+    .pagefoot {
+      border-top: 1px solid var(--border);
+      padding-block: 34px;
+      color: var(--quiet);
+      font-size: 14px;
+    }
+
+    .footer-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    @media (max-width: 1020px) {
+      .hero-grid,
+      .readiness {
+        grid-template-columns: 1fr;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      h1 {
+        max-width: 13ch;
+        font-size: 40px;
+      }
+
+      h2 {
+        font-size: 30px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: calc(100% - 56px);
+        margin-inline: auto;
+      }
+
+      .topnav-inner {
+        min-height: auto;
+        flex-wrap: wrap;
+        column-gap: 12px;
+        padding-block: 12px;
+      }
+
+      .topnav .btn-primary {
+        order: 2;
+        flex: 1 1 100%;
+        width: 100%;
+        max-width: none;
+        min-height: 40px;
+        padding: 8px 10px;
+        text-align: center;
+        white-space: normal;
+        overflow-wrap: anywhere;
+      }
+
+      nav {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .section {
+        padding-block: 48px;
+      }
+
+      .hero {
+        padding-block: 52px 44px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      h2 {
+        font-size: 26px;
+      }
+
+      .lead {
+        font-size: 16px;
+        max-width: 32ch;
+      }
+
+      .dashboard,
+      .proof-grid,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-grid {
+        display: block;
+      }
+
+      .product-frame {
+        margin-top: 44px;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .frame-top {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .actions .btn {
+        width: 100%;
+      }
+
+      .dashboard {
+        padding: 14px;
+      }
+
+      .bar-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .section-heading {
+        display: block;
+      }
+
+      .section-heading .lead {
+        margin-top: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="container nav-content">
-            <a href="#" class="logo">Easy Wins</a>
-            <a href="https://github.com/reiiigns/Easy-Wins" class="nav-link" target="_blank" rel="noopener">GitHub</a>
+  <header class="topnav" data-od-id="topnav">
+    <div class="container topnav-inner">
+      <a class="brand" href="#hero" aria-label="Easy Wins home">
+        <span class="brand-mark">EW</span>
+        <span>Easy Wins</span>
+      </a>
+      <nav aria-label="Page sections">
+        <a href="#features">Features</a>
+        <a href="#readiness">Readiness</a>
+        <a href="https://github.com/reiiigns/Easy-Wins">README</a>
+      </nav>
+      <a class="btn btn-primary" href="#buy">Get instant clarity — $19, keep forever</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero" data-od-id="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">LOCAL-FIRST PROJECT ANALYSIS</p>
+          <h1>Stop triaging. Start shipping.</h1>
+          <p class="lead">Easy Wins scores your codebase and surfaces exactly one task — the one with the highest return on your attention. No subscription. No planning board. Just the next move.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="#buy">Get instant clarity — $19, keep forever</a>
+            <a class="btn btn-secondary" href="https://github.com/reiiigns/Easy-Wins">Read the README</a>
+          </div>
+          <p class="hero-note">30-day money-back guarantee. $19 one-time — keep it forever. · Works locally with heuristics, supports llama.cpp offline, and OpenAI when configured.</p>
         </div>
-    </nav>
 
-    <main>
-        <section class="hero">
-            <div class="container">
-                <h1 class="hero-title">Easy Wins</h1>
-                <p class="hero-subtitle">Launch Ready Out of the Box</p>
-                <p class="hero-pitch">The tool that tells you exactly what to work on next.</p>
-                <a href="https://easy-wins.lemonsqueezy.com" class="cta-button" id="cta-main">Get Started</a>
+        <div class="product-frame" aria-label="Screenshot-style Easy Wins dashboard proof">
+          <div class="frame-top">
+            <div class="window-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <span class="frame-title">I:\Project Tracker · Easy Wins report</span>
+          </div>
+          <div class="dashboard">
+            <div class="panel">
+              <p class="panel-title">PROJECT STAGE</p>
+              <div class="score"><strong>93</strong><span>/ 100</span></div>
+              <span class="stage">Production-ready</span>
             </div>
-        </section>
-
-        <section class="screenshot-section">
-            <div class="container">
-                <img src="assets/easywins_desktop_preview.png" alt="Easy Wins dashboard" class="screenshot-img" loading="lazy">
+            <div class="panel">
+              <p class="panel-title">READINESS SIGNALS</p>
+              <div class="bars">
+                <div class="bar-row"><span>Tests and CI</span><div class="bar-track"><div class="bar-fill success" style="width: 92%;"></div></div></div>
+                <div class="bar-row"><span>Accessibility notes</span><div class="bar-track"><div class="bar-fill success" style="width: 88%;"></div></div></div>
+                <div class="bar-row"><span>Release checklist</span><div class="bar-track"><div class="bar-fill warning" style="width: 76%;"></div></div></div>
+              </div>
             </div>
-        </section>
-
-        <section class="features">
-            <div class="container">
-                <h2 class="section-title">Why Easy Wins?</h2>
-                <ul class="feature-list">
-                    <li>
-                        <strong>Zero-Config</strong> — Point it at any project and go. No setup, no configuration files.
-                    </li>
-                    <li>
-                        <strong>Tells You What to Work On</strong> — Get actionable insights on exactly what to prioritize next.
-                    </li>
-                    <li>
-                        <strong>Claude Code Integration</strong> — Seamlessly works with Claude Code for enhanced AI-assisted development.
-                    </li>
-                    <li>
-                        <strong>Launch-Ready Out of the Box</strong> — Start shipping faster with pre-built workflows and best practices.
-                    </li>
-                    <li>
-                        <strong>Local-First</strong> — Your code stays on your machine. No cloud dependency, no data leaving your environment.
-                    </li>
-                </ul>
+            <div class="panel win-card">
+              <p class="panel-title">NEXT EASY WIN</p>
+              <h3>Commit uncommitted changes</h3>
+              <p>Keeping a clean working directory prevents accidental loss of work and makes context switching easier.</p>
+              <span class="path">.easywins/metadata.json</span>
             </div>
-        </section>
-
-        <section class="social-proof">
-            <div class="container">
-                <h2 class="section-title">What Developers Are Saying</h2>
-                <div class="testimonials">
-                    <div class="testimonial-placeholder">
-                        <p class="quote">"Easy Wins transformed how I approach my daily development workflow."</p>
-                        <p class="attribution">— Developer Testimonial</p>
-                    </div>
-                    <div class="testimonial-placeholder">
-                        <p class="quote">"Finally, a tool that tells me exactly what to work on without the guesswork."</p>
-                        <p class="attribution">— Developer Testimonial</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="cta-section">
-            <div class="container">
-                <h2>Ready to find your next easy win?</h2>
-                <a href="https://easy-wins.lemonsqueezy.com" class="cta-button" id="cta-bottom">Start Now</a>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container footer-content">
-            <p>&copy; 2026 Easy Wins. All rights reserved.</p>
-            <a href="https://github.com/reiiigns/Easy-Wins" target="_blank" rel="noopener">View on GitHub</a>
+          </div>
         </div>
-    </footer>
+      </div>
+    </section>
 
-    <script src="script.js"></script>
+    <section class="section video-section" data-od-id="video">
+      <div class="container">
+        <video
+          class="product-video"
+          src="assets/easywins_video_mockup.mp4"
+          poster="assets/easywins_video_mockup_poster.png"
+          autoplay
+          muted
+          loop
+          playsinline
+          aria-label="Easy Wins product demo: scan a project, see the readiness score, pick the next win"
+        ></video>
+      </div>
+    </section>
+
+    <section class="section" id="features" data-od-id="features">
+      <div class="container">
+        <div class="section-heading">
+          <h2>A project check that ends with a next move.</h2>
+          <p class="lead">Easy Wins reads the shape of a repo and turns scattered readiness signals into a short plan builders can act on today.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16M4 12h10M4 19h16"/></svg>
+            <h3>Local scan</h3>
+            <p>Reads project structure, docs, package files, TODOs, git status, source counts, tests, CI, Docker, and release signals.</p>
+          </article>
+          <article class="feature-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v18M5 12h14"/><path d="M17 7l-10 10"/></svg>
+            <h3>Readiness scoring</h3>
+            <p>Scores core functionality, UI polish, code quality, stability, performance, documentation, and deployment readiness.</p>
+          </article>
+          <article class="feature-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 5h14v14H5z"/><path d="M8 12l3 3 5-6"/></svg>
+            <h3>Today plan</h3>
+            <p>Generates high-impact, quick tasks with file-level starting points so the next step is specific, not motivational.</p>
+          </article>
+          <article class="feature-card">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h4"/></svg>
+            <h3>Agent memory</h3>
+            <p>Writes local `.easywins/` metadata so humans and agents can pick up the same project context later.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-od-id="proof">
+      <div class="container proof-grid">
+        <article class="proof-card">
+          <p class="proof-meta">ANALYZER MODES</p>
+          <h3>Useful before any AI key exists.</h3>
+          <p>Start with heuristic analysis immediately. Add local llama.cpp for offline AI review, or configure OpenAI as a cloud fallback when that fits the project.</p>
+        </article>
+        <article class="proof-card">
+          <p class="proof-meta">TARGET PROFILES</p>
+          <h3>Checks the kind of thing you are shipping.</h3>
+          <p>Profiles cover web, desktop, mobile, server/API, CLI, games, accessibility, and publishing targets like GitHub releases and Microsoft Store.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="readiness" data-od-id="readiness">
+      <div class="container readiness">
+        <div>
+          <p class="eyebrow">LAUNCH READINESS</p>
+          <h2>Proof without pretending the work is done for you.</h2>
+          <p class="lead" style="margin-top: 18px;">The repository already documents release checks, accessibility coverage, validation commands, and CI. The launch page should say that plainly.</p>
+          <div class="code-strip" aria-label="Validation commands">
+            <span class="code-pill">npm run typecheck</span>
+            <span class="code-pill">npm test</span>
+            <span class="code-pill">npm run build</span>
+          </div>
+        </div>
+        <div class="checklist">
+          <div class="check-row">
+            <span aria-hidden="true">✓</span>
+            <div><h3>WCAG 2.2 AA notes</h3><p>Keyboard flow, labels, contrast, focus states, reduced motion, and chart semantics are documented for the dashboard.</p></div>
+          </div>
+          <div class="check-row">
+            <span aria-hidden="true">✓</span>
+            <div><h3>GitHub release checklist</h3><p>Versioning, validation, artifacts, release notes, checksums, and publishing checks have a written path.</p></div>
+          </div>
+          <div class="check-row">
+            <span aria-hidden="true">✓</span>
+            <div><h3>CI-backed validation</h3><p>The workflow covers install, lint, typecheck, build, tests, and Docker build from the app workspace.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" data-od-id="cta">
+      <div class="container">
+        <h2>Scan the repo. Pick the win. Keep moving.</h2>
+        <p class="lead">Easy Wins is built for local projects where the next useful task matters more than another planning board.</p>
+        <a class="btn btn-primary" href="https://reiiigns.lemonsqueezy.com/checkout/buy/250612ce-c3d3-4a72-9ae1-9a6bb113f5fd">Buy for $19</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pagefoot" data-od-id="footer">
+    <div class="container footer-row">
+      <span>© 2026 Easy Wins. All rights reserved.</span>
+      <span>Local-first project analysis. Practical readiness checks. One clear next win.</span>
+    </div>
+  </footer>
 </body>
 </html>
