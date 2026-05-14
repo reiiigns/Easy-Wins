@@ -1,4 +1,0 @@
-interface:
-  display_name: "Accessibility Audit"
-  short_description: "Audit UI accessibility standards"
-  default_prompt: "Assess accessibility readiness against the selected standards and identify the next practical fixes."

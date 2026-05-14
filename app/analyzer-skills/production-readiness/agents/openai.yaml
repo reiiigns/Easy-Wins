@@ -1,4 +1,0 @@
-interface:
-  display_name: "Production Readiness"
-  short_description: "Check release hardening and ops"
-  default_prompt: "Assess this project for production readiness and identify the next practical release-hardening wins."

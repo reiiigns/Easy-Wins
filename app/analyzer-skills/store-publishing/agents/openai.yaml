@@ -1,4 +1,0 @@
-interface:
-  display_name: "Store Publishing"
-  short_description: "Check app store launch requirements"
-  default_prompt: "Assess store publishing readiness for the selected targets and produce practical checklist wins."
